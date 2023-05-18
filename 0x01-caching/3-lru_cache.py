@@ -8,17 +8,17 @@ class LRUCache(BaseCaching):
     def __init__(self):
         super().__init__()
         self.head, self.tail = '-', '='
-        self.next, self.prev = {}, {}
+        self.nxt, self.prev = {}, {}
         self.handle(self.head, self.tail)
 
     def handle(self, head, tail):
-        """ LRU algorithm, handle elements """
-        self.next[head], self.prev[tail] = tail, head
+        """ Handle elements """
+        self.nxt[head], self.prev[tail] = tail, head
 
     def _remove(self, key):
-        """ LRU algorithm, remove element """
-        self.handle(self.prev[key], self.next[key])
-        del self.prev[key], self.next[key], self.cache_data[key]
+        """ Remove element """
+        self.handle(self.prev[key], self.nxt[key])
+        del self.prev[key], self.nxt[key], self.cache_data[key]
 
     def _add(self, key, item):
         """ LRU algorithm, add element """
@@ -26,8 +26,8 @@ class LRUCache(BaseCaching):
         self.handle(self.prev[self.tail], key)
         self.handle(key, self.tail)
         if len(self.cache_data) > BaseCaching.MAX_ITEMS:
-            print("DISCARD: {}".format(self.next[self.head]))
-            self._remove(self.next[self.head])
+            print(f"DISCARD: {self.nxt[self.head]}")
+            self._remove(self.nxt[self.head])
 
     def put(self, key, item):
         """ Assign to the dictionary """
