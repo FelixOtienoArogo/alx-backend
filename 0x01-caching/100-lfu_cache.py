@@ -18,7 +18,8 @@ class LFUCache(BaseCaching):
                 del self.lru_cache[key]
             if len(self.lru_cache) > BaseCaching.MAX_ITEMS - 1:
                 min_value = min(self.lfu_cache.values())
-                lfu_keys = [k for k, v in self.lfu_cache.items() if v == min_value]
+                lfu_keys = [k for k, v in self.lfu_cache.items()
+                            if v == min_value]
                 if len(lfu_keys) == 1:
                     print("DISCARD:", lfu_keys[0])
                     self.lru_cache.pop(lfu_keys[0])
