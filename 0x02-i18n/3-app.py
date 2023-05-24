@@ -3,40 +3,34 @@
     Parametrize templates """
 from flask import Flask, render_template, request
 from flask_babel import Babel, gettext
-from typing import Tuple
+
+app = Flask(__name__)
+babel = Babel(app)
+""" instantiate the Babel object """
 
 
-class Config:
-    """ Configure available languages """
-
-    LANGUAGES: Tuple[str] = ["en", "fr"]
-    BABEL_DEFAULT_LOCALE: str = "en"
-    BABEL_DEFAULT_TIMEZONE: str = "UTC"
-
-
-app: Flask = Flask(__name__)
-""" instantiate the app """
+class Config(object):
+    """ config class """
+    LANGUAGES = ['en', 'fr']
+    BABEL_DEFAULT_LOCALE = 'en'
+    BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 
 app.config.from_object(Config)
 """ Use that class as config for Flask app """
 
 
-babel: Babel = Babel(app)
-""" instantiate the Babel object """
+@app.route('/')
+def root():
+    """ basic Flask app """
+    return render_template("3-index.html")
 
 
 @babel.localeselector
-def get_locale() -> str:
+def get_locale():
     """ to determine the best match with our supported languages """
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
-@app.route('/')
-def hello() -> str:
-    """ basic Flask app """
-    return render_template('3-index.html')
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run()
