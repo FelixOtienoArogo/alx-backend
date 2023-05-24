@@ -17,7 +17,7 @@ app: Flask = Flask(__name__)
 
 
 app.config.from_object(Config)
-"""Use that class as config for Flask app."""
+""" Use that class as config for Flask app """
 
 
 babel: Babel = Babel(app)
