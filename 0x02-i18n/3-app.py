@@ -1,34 +1,39 @@
 #!/usr/bin/env python3
-"""A Basic Flask app with internationalization support."""
-from flask_babel import Babel, gettext
+"""Setup a basic Flask app."""
 from flask import Flask, render_template, request
+from flask_babel import Babel, gettext
+from typing import Tuple
 
 
 class Config:
-    """Represent a Flask Babel configuration."""
+    """Configure available languages."""
 
-    LANGUAGES = ["en", "fr"]
-    BABEL_DEFAULT_LOCALE = "en"
-    BABEL_DEFAULT_TIMEZONE = "UTC"
+    LANGUAGES: Tuple[str] = ["en", "fr"]
+    BABEL_DEFAULT_LOCALE: str = "en"
+    BABEL_DEFAULT_TIMEZONE: str = "UTC"
 
 
-app = Flask(__name__)
+app: Flask = Flask(__name__)
+
+
 app.config.from_object(Config)
-app.url_map.strict_slashes = False
-babel = Babel(app)
+"""Use that class as config for Flask app."""
+
+
+babel: Babel = Babel(app)
 
 
 @babel.localeselector
 def get_locale() -> str:
-    """Retrieve the locale for a web page."""
-    return request.accept_languages.best_match(app.config["LANGUAGES"])
+    """Determine the best match with our supported languages."""
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
 @app.route('/')
-def get_index() -> str:
-    """Do home/index page."""
+def hello() -> str:
+    """Just a test function."""
     return render_template('3-index.html')
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True)
