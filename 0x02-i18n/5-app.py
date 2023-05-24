@@ -23,7 +23,6 @@ class Config:
 
 
 app: Flask = Flask(__name__)
-"""Start flask app."""
 
 
 app.config.from_object(Config)
@@ -31,7 +30,6 @@ app.config.from_object(Config)
 
 
 babel: Babel = Babel(app)
-"""Initialize babel."""
 
 
 @babel.localeselector
