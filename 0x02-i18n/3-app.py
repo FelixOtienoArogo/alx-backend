@@ -1,36 +1,40 @@
 #!/usr/bin/env python3
-""" Basic Flask app, Basic Babel setup, Get locale from request,
-    Parametrize templates """
+"""
+a python module to initiate a flask app using Babel
+"""
 from flask import Flask, render_template, request
-from flask_babel import Babel, gettext
-
-app = Flask(__name__)
-babel = Babel(app)
-""" instantiate the Babel object """
+from flask_babel import Babel
 
 
 class Config(object):
-    """ config class """
-    LANGUAGES = ['en', 'fr']
-    BABEL_DEFAULT_LOCALE = 'en'
-    BABEL_DEFAULT_TIMEZONE = 'UTC'
+    """
+    a class to configure babel
+    """
+    LANGUAGES = ["en", "fr"]
+    BABEL_DEFAULT_LOCALE = "en"
+    BABEL_DEFAULT_TIMEZONE = "UTC"
 
 
+app = Flask(__name__)
 app.config.from_object(Config)
-""" Use that class as config for Flask app """
-
-
-@app.route('/')
-def root():
-    """ basic Flask app """
-    return render_template("3-index.html")
+babel = Babel(app)
 
 
 @babel.localeselector
 def get_locale():
-    """ to determine the best match with our supported languages """
+    """
+    get_locale - function to get the local selector
+    """
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
+@app.route('/', strict_slashes=False)
+def Welcome():
+    """
+    Welcome - a route to a 3-index html
+    """
+    return render_template('3-index.html')
+
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True, host="0.0.0.0", port="5000")
