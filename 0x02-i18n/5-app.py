@@ -9,9 +9,9 @@ The app supports rendering HTML templates, handling HTTP requests,
 and determining the best match for supported languages.
 """
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, g
 from flask_babel import Babel, gettext
-from typing import Tuple
+from typing import Tuple, Dict
 
 
 class Config:
@@ -21,6 +21,14 @@ class Config:
     BABEL_DEFAULT_LOCALE: str = "en"
     BABEL_DEFAULT_TIMEZONE: str = "UTC"
 
+
+users = {
+    1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
+    2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
+    3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
+    4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
+}
+    
 
 app: Flask = Flask(__name__)
 
@@ -46,7 +54,22 @@ def get_locale() -> str:
 @app.route('/')
 def hello() -> str:
     """Just a test function."""
-    return render_template('4-index.html')
+    return render_template('5-index.html')
+
+
+def get_user() -> Dict:
+    """Return a user dictionary or None if the ID cannot be found."""
+    try:
+        userId = request.args.get('login_as')
+        return users[int(userId)]
+    except Exception:
+        return None
+
+
+@app.before_request
+def before_request() -> None:
+    """Use get_user to find a user if any, and set it as a global."""
+    g.user = get_user()
 
 
 if __name__ == '__main__':
