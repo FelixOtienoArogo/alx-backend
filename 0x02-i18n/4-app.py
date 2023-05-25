@@ -9,7 +9,9 @@ from typing import Tuple
 
 
 class Config:
-    """Configure available languages."""
+    """
+    Configure available languages.
+    """
 
     LANGUAGES: Tuple[str] = ["en", "fr"]
     BABEL_DEFAULT_LOCALE: str = "en"
@@ -17,20 +19,28 @@ class Config:
 
 
 app: Flask = Flask(__name__)
-"""Start flask app."""
+"""
+Start flask app.
+"""
 
 
 app.config.from_object(Config)
-"""Use that class as config for Flask app."""
+"""
+Use that class as config for Flask app.
+"""
 
 
 babel: Babel = Babel(app)
-"""Initialize babel."""
+"""
+Initialize babel.
+"""
 
 
 @babel.localeselector
 def get_locale() -> str:
-    """Determine the best match with our supported languages."""
+    """
+    Determine the best match with our supported languages.
+    """
     lang = request.args.get('locale')
     supplang = app.config['LANGUAGES']
     if lang in supplang:
@@ -41,7 +51,9 @@ def get_locale() -> str:
 
 @app.route('/')
 def hello() -> str:
-    """Just a test function."""
+    """
+    Just a test function.
+    """
     return render_template('4-index.html')
 
 
