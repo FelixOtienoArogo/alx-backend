@@ -1,40 +1,48 @@
 #!/usr/bin/env python3
 """
-a python module to initiate a flask app using Babel
+a python module to initiate a Flask App
 """
+
 from flask import Flask, render_template, request
-from flask_babel import Babel
+from flask_babel import Babel, gettext
+from typing import Tuple
 
 
-class Config(object):
+class Config:
     """
-    a class to configure babel
+    configure available languages
     """
-    LANGUAGES = ["en", "fr"]
-    BABEL_DEFAULT_LOCALE = "en"
-    BABEL_DEFAULT_TIMEZONE = "UTC"
+
+    LANGUAGES: Tuple[str] = ["en", "fr"]
+    BABEL_DEFAULT_LOCALE: str = "en"
+    BABEL_DEFAULT_TIMEZONE: str = "UTC"
 
 
-app = Flask(__name__)
+app: Flask = Flask(__name__)
 app.config.from_object(Config)
-babel = Babel(app)
+babel: Babel = Babel(app)
 
 
 @babel.localeselector
-def get_locale():
+def get_locale() -> str:
     """
-    get_locale - function to get the local selector
+    determine the best match with our supported languages
     """
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
+    lang = request.args.get('locale')
+    supplang = app.config['LANGUAGES']
+    if lang in supplang:
+        return lang
+    else:
+        return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
-@app.route('/', strict_slashes=False)
-def Welcome():
+@app.route('/')
+def hello() -> str:
     """
-    Welcome - a route to a 3-index html
+    Just a test function
     """
-    return render_template('3-index.html')
+    return render_template('4-index.html')
 
 
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port="5000")
+if __name__ == '__main__':
+    app.run(debug=True)
