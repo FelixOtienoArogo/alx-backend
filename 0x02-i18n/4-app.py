@@ -1,12 +1,6 @@
 #!/usr/bin/env python3
 """
-This module sets up a basic Flask app with localization support
-using Flask-Babel.
-
-It provides a Flask application instance, configures available languages,
-default locale, and default timezone.
-The app supports rendering HTML templates, handling HTTP requests,
-and determining the best match for supported languages.
+Flask App
 """
 
 from flask import Flask, render_template, request
