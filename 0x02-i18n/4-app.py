@@ -3,7 +3,7 @@
 a python module to initiate a flask app using Babel
 """
 from flask import Flask, render_template, request
-from flask_babel import Babel, getttext
+from flask_babel import Babel
 
 
 class Config(object):
