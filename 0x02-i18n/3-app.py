@@ -4,25 +4,24 @@ a python module to initiate a flask app using Babel
 """
 from flask import Flask, render_template, request
 from flask_babel import Babel, gettext
-from typing import Tuple
 
 
 class Config:
     """
     a class to configure babel
     """
-    LANGUAGES: Tuple[str] = ["en", "fr"]
-    BABEL_DEFAULT_LOCALE: str = "en"
-    BABEL_DEFAULT_TIMEZONE: str = "UTC"
+    LANGUAGES = ["en", "fr"]
+    BABEL_DEFAULT_LOCALE = "en"
+    BABEL_DEFAULT_TIMEZONE = "UTC"
 
 
-app: Flask = Flask(__name__)
+app = Flask(__name__)
 app.config.from_object(Config)
-babel: Babel = Babel(app)
+babel = Babel(app)
 
 
 @babel.localeselector
-def get_locale() -> str:
+def get_locale():
     """
     get_locale - function to get the local selector
     """
@@ -35,7 +34,7 @@ def get_locale() -> str:
 
 
 @app.route('/')
-def hello() -> str:
+def hello():
     """
     hello - a route to a 4-index html
     """
