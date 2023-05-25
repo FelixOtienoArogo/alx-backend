@@ -1,25 +1,18 @@
 #!/usr/bin/env python3
 """
-This module sets up a basic Flask app with localization support
-using Flask-Babel.
-
-It provides a Flask application instance, configures available languages,
-default locale, and default timezone.
-The app supports rendering HTML templates, handling HTTP requests,
-and determining the best match for supported languages.
+a python module to initiate a flask app using Babel
 """
-
 from flask import Flask, render_template, request, g
-from flask_babel import Babel, gettext
-from typing import Tuple, Dict
+from flask_babel import Babel
 
 
-class Config:
-    """Configure available languages."""
-
-    LANGUAGES: Tuple[str] = ["en", "fr"]
-    BABEL_DEFAULT_LOCALE: str = "en"
-    BABEL_DEFAULT_TIMEZONE: str = "UTC"
+class Config(object):
+    """
+    a class to configure babel
+    """
+    LANGUAGES = ["en", "fr"]
+    BABEL_DEFAULT_LOCALE = "en"
+    BABEL_DEFAULT_TIMEZONE = "UTC"
 
 
 users = {
@@ -28,22 +21,19 @@ users = {
     3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
     4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
 }
-    
-
-app: Flask = Flask(__name__)
 
 
+app = Flask(__name__)
 app.config.from_object(Config)
-"""Use that class as config for Flask app."""
-
-
-babel: Babel = Babel(app)
+babel = Babel(app)
 
 
 @babel.localeselector
-def get_locale() -> str:
-    """Determine the best match with our supported languages."""
-    lang = request.args.get('locale')
+def get_locale():
+    """
+    get_locale - function to get the local selector
+    """
+    lang = request.args.get('locale', None)
     supplang = app.config['LANGUAGES']
     if lang in supplang:
         return lang
@@ -51,26 +41,32 @@ def get_locale() -> str:
         return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
-@app.route('/')
-def hello() -> str:
-    """Just a test function."""
+@app.route('/', strict_slashes=False)
+def hello():
+    """
+    hello - a route to a 4-index html
+    """
     return render_template('5-index.html')
 
 
-def get_user() -> Dict:
-    """Return a user dictionary or None if the ID cannot be found."""
-    try:
-        userId = request.args.get('login_as')
-        return users[int(userId)]
-    except Exception:
+def get_user():
+    """
+    get_user - function that returns a given user
+    """
+    user_id = request.args.get('login_as', None)
+    if user_id is None:
         return None
+    return users.get(int(user_id))
 
 
 @app.before_request
-def before_request() -> None:
-    """Use get_user to find a user if any, and set it as a global."""
-    g.user = get_user()
+def before_request():
+    """
+    before_request - function to force execution before other methods
+    """
+    usr = get_user()
+    g.user = usr
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port="5000")
