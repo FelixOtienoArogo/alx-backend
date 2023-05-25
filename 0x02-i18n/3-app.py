@@ -25,16 +25,18 @@ def get_locale():
     """
     get_locale - function to get the local selector
     """
-    lcl = request.args.get('locale', None)
-    if lcl and lcl in app.config['LANGUAGES']:
-        return lcl
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
+    lang = request.args.get('locale', None)
+    supplang = app.config['LANGUAGES']
+    if lang in supplang:
+        return lang
+    else:
+        return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
 @app.route('/', strict_slashes=False)
-def Welcome():
+def hello():
     """
-    Welcome - a route to a 4-index html
+    hello - a route to a 4-index html
     """
     return render_template('4-index.html')
 
