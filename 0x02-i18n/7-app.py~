@@ -47,12 +47,33 @@ def get_locale():
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
+@babel.timezoneselector
+def get_timezone():
+    """
+    get_timezone - function to get the timezone
+    """
+    timeZone = request.args.get('timezone', None)
+    if timeZone:
+        try:
+            return timezone(timeZone).zone
+        except pytz.exceptions.UnknownTimeZoneError:
+            return 'UTC'
+    if g.user:
+        try:
+            timeZone = g.user.get('timezone')
+            return timezone(timeZone).zone
+        except pytz.exceptions.UnkownTimeZoneError:
+            return 'UTC'
+    default = app.cofig['BABEL_DEFAULT_TIMEZONE']
+    return request.accept_languages.best_match(default)
+
+
 @app.route('/', strict_slashes=False)
 def hello():
     """
     hello - a route to a 4-index html
     """
-    return render_template('5-index.html')
+    return render_template('6-index.html')
 
 
 def get_user():
