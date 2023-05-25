@@ -2,7 +2,6 @@
 """
 a python module to initiate a Flask App
 """
-
 from flask import Flask, render_template, request
 from flask_babel import Babel, gettext
 from typing import Tuple
@@ -12,7 +11,6 @@ class Config:
     """
     configure available languages
     """
-
     LANGUAGES: Tuple[str] = ["en", "fr"]
     BABEL_DEFAULT_LOCALE: str = "en"
     BABEL_DEFAULT_TIMEZONE: str = "UTC"
