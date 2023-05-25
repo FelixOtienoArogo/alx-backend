@@ -3,8 +3,9 @@
 a python module to initiate a flask app using Babel
 """
 from flask import Flask, render_template, request, g
-from flask_babel import Babel, format_datetime
+from flask_babel import Babel, gettext, format_datetime
 import pytz
+import datetime
 
 
 class Config(object):
@@ -44,21 +45,34 @@ def get_locale():
             return lang
     lang = request.headers.get('locale', None)
     if lang in supplang:
-        return lang
+        return lcl
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
 @babel.timezoneselector
 def get_timezone():
     """
-    get_timezone() - retrieve the timezone
+    get_timezone - function to get the timezone
     """
-    if not timezone and g.user:
-        timezone = g.user['timezone']
+    timeZone = request.args.get('timezone')
+    if timeZone:
+        if timeZone in pytz.all_timezones:
+            return timeZone
+        else:
+            raise pytz.exceptions.UnkownTimeZoneError
     try:
-        return pytz.timezone(timezone).zone
-    except pytz.exceptions.UnknownTimeZoneError:
-        return app.config['BABEL_DEFAULT_TIMEZONE']
+        userId = request.args.get('login_as')
+        user = users[int(userId)]
+        timeZone = user['timezone']
+    except Exception:
+        timeZone = None
+    if timeZone:
+        if timeZone in pytz.all_timezones:
+            return timeZone
+        else:
+            raise pytz.exceptions.UnknownTimezoneError
+    default = app.config['BABEL_DEFAULT_TIMEZONE']
+    return default
 
 
 @app.route('/', strict_slashes=False)
@@ -87,6 +101,8 @@ def before_request():
     """
     usr = get_user()
     g.user = usr
+    utcNow = pytz.utc.localize(datetime.datetime.utcnow())
+    local_time_now = utcNow.astimezone(pytz.timezone(get_timezone()))
 
 
 if __name__ == "__main__":
