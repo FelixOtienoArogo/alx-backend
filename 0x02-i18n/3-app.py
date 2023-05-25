@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-a python module to initiate a Flask App
+a python module to initiate a flask app using Babel
 """
 from flask import Flask, render_template, request
 from flask_babel import Babel, gettext
@@ -9,7 +9,7 @@ from typing import Tuple
 
 class Config:
     """
-    configure available languages
+    a class to configure babel
     """
     LANGUAGES: Tuple[str] = ["en", "fr"]
     BABEL_DEFAULT_LOCALE: str = "en"
@@ -24,7 +24,7 @@ babel: Babel = Babel(app)
 @babel.localeselector
 def get_locale() -> str:
     """
-    determine the best match with our supported languages
+    get_locale - function to get the local selector
     """
     lang = request.args.get('locale')
     supplang = app.config['LANGUAGES']
@@ -37,7 +37,7 @@ def get_locale() -> str:
 @app.route('/')
 def hello() -> str:
     """
-    Just a test function
+    hello - a route to a 4-index html
     """
     return render_template('4-index.html')
 
