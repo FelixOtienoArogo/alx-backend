@@ -1,9 +1,10 @@
-export default function createPushNotificationsJobs(jobs, queue){
+function createPushNotificationsJobs(jobs, queue){
 	if(!Array.isArray(jobs)){
 		throw new Error("Jobs is not an array");
 	}
 	jobs.forEach((job_data) => {
-		const job = queue.create('push_notification_code_3', job_data).save((error) => {
+		const job = queue.create('push_notification_code_3', job_data);
+		job.save((error) => {
 			if(!error){
 				console.log(`Notification job created: ${job.id}`);
 			}
@@ -13,3 +14,5 @@ export default function createPushNotificationsJobs(jobs, queue){
 		job.on('progress', (percentage) => console.log(`Notification job ${job.id} ${percentage}% complete`));
 	});
 }
+
+export default createPushNotificationsJobs;
